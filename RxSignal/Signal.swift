@@ -11,7 +11,7 @@ import RxSwift
 import RxSwiftExt
 import RxCocoa
 
-class Signal<E>: ObservableConvertibleType {
+class Signal<E>: ObservableConvertibleType, DriverConvertibleType {
     private let _out: Variable<E>
     var value: E { return _out.value }
     init(out: Variable<E>) {
@@ -34,6 +34,16 @@ class Signal<E>: ObservableConvertibleType {
     }
     func asObservable() -> Observable<E> {
         return Observable.create(self._subscribe).shareReplayLatestWhileConnected()
+    }
+    func asDriver() -> Driver<E> {
+        return asDriver { error in
+            // Copied from RxCocoa's ControlProperty+Driver.swift.
+            #if DEBUG
+                rxFatalError("Somehow driver received error from a source that shouldn't fail.")
+            #else
+                return Driver.empty()
+            #endif
+        }
     }
     private func _subscribe<O: ObserverType where O.E == E>(observer: O) -> Disposable {
         return _out.asObservable().subscribe(observer)
