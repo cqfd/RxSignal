@@ -1,5 +1,5 @@
 #
-#  Be sure to run `pod spec lint RxSwift.podspec' to ensure this is a
+#  Be sure to run `pod spec lint RxSignal.podspec' to ensure this is a
 #  valid spec and to remove all comments including this before submitting the spec.
 #
 #  To learn more about Podspec attributes see http://docs.cocoapods.org/specification.html
@@ -15,9 +15,9 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "RxSwift"
+  s.name         = "RxSignal"
   s.version      = "0.0.1"
-  s.summary      = "A short description of RxSwift."
+  s.summary      = "A short description of RxSignal."
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -79,7 +79,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/happy4crazy/RxSwift.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/happy4crazy/RxSignal.git", :tag => "#{s.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
