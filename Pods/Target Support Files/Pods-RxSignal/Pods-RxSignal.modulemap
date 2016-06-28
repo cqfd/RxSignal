@@ -1,0 +1,6 @@
+framework module Pods_RxSignal {
+  umbrella header "Pods-RxSignal-umbrella.h"
+
+  export *
+  module * { export * }
+}
