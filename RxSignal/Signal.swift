@@ -29,6 +29,9 @@ class Signal<E>: ObservableConvertibleType, DriverConvertibleType {
     func flatMapLatest<R>(selector: E -> Signal<R>) -> Signal<R> {
         return FlatMapLatestSignal(source: self, selector: selector)
     }
+    func scan<R>(seed: R, accumulator: (R, E) -> R) -> Signal<R> {
+        return ScanSignal(source: self, seed: seed, accumulator: accumulator)
+    }
     static func combineLatest<A, B>(a: Signal<A>, _ b: Signal<B>, resultSelector: (A, B) -> E) -> Signal<E> {
         return CombineLatest2Signal(a: a, b: b, resultSelector: resultSelector)
     }
@@ -126,6 +129,22 @@ class FlatMapLatestSignal<In, Out>: Signal<Out> {
         return FlatMapLatestSignal<In, R>(source: _source, selector: compose(Signal.map(selector), _selector))
     }
 }
+
+class ScanSignal<Seed, In>: Signal<Seed> {
+    private let _source: Signal<In>
+    private let _accumulator: (Seed, In) -> Seed
+    private let disposeBag = DisposeBag()
+    
+    init(source: Signal<In>, seed: Seed, accumulator: (Seed, In) -> Seed) {
+        _source = source
+        _accumulator = accumulator
+        let initialValue = accumulator(seed, _source.value)
+        super.init(out: Variable(initialValue))
+        let subsequentValues = _source.asObservable().skip(1).scan(initialValue, accumulator: accumulator)
+        subsequentValues.bindTo(_out).addDisposableTo(disposeBag)
+    }
+}
+
 
 class CombineLatest2Signal<A, B, E>: Signal<E> {
     private let _a: Signal<A>
